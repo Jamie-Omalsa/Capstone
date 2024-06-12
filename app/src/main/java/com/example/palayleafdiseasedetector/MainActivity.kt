@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -17,13 +18,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.IOException
 
-private val REQUEST_CAMERA_PERMISSION = 1
-private val REQUEST_IMAGE_CAPTURE = 2
+private const val REQUEST_CAMERA_PERMISSION = 1
+private const val REQUEST_IMAGE_CAPTURE = 2
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var cameraPreview: Camera2Preview
+    private var imageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity() {
                 openCamera()
             } else {
                 // Permission denied
+                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -63,9 +66,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun dispatchTakePictureIntent() {
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.TITLE, "Image_${System.currentTimeMillis()}")
+            put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
+        }
+        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
             takePictureIntent.resolveActivity(packageManager)?.also {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
@@ -99,20 +108,20 @@ class MainActivity : AppCompatActivity() {
                     contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
                     resolver.update(uri, contentValues, null, null)
                 } else {
-                    // For versions lower than Q, notify media scanner
                     applicationContext.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri))
                 }
 
                 Toast.makeText(this, "Image saved to gallery", Toast.LENGTH_SHORT).show()
             } catch (e: IOException) {
-                Toast.makeText(this, "Failed to save image: ${e.message}", Toast.LENGTH_SHORT).show() // Add logging for IOException
-                e.printStackTrace() // Log the stack trace for IOException
+                Log.e("MainActivity", "Failed to save image", e)
+                Toast.makeText(this, "Failed to save image: ${e.message}", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                Toast.makeText(this, "Failed to save image: ${e.message}", Toast.LENGTH_SHORT).show() // Add logging for other exceptions
-                e.printStackTrace() // Log the stack trace for other exceptions
+                Log.e("MainActivity", "Failed to save image", e)
+                Toast.makeText(this, "Failed to save image: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         } ?: run {
-            Toast.makeText(this, "Failed to create image file", Toast.LENGTH_SHORT).show() // Add logging for imageUri being null
+            Log.e("MainActivity", "Failed to create image file")
+            Toast.makeText(this, "Failed to create image file", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -120,14 +129,16 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as? Bitmap
-            if (imageBitmap != null) {
-                Log.d("MainActivity", "Image bitmap is not null")
-                saveImageToGallery(imageBitmap)
-            } else {
-                Log.e("MainActivity", "Image bitmap is null")
+            imageUri?.let { uri ->
+                try {
+                    val imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                    saveImageToGallery(imageBitmap)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
         }
     }
-
 }
+
+//modified code
