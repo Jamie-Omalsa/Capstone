@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.exifinterface.media.ExifInterface
 import java.io.IOException
 
 private const val REQUEST_CAMERA_PERMISSION = 1
@@ -75,9 +77,7 @@ class MainActivity : AppCompatActivity() {
 
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-            takePictureIntent.resolveActivity(packageManager)?.also {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            }
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         }
     }
 
@@ -132,13 +132,42 @@ class MainActivity : AppCompatActivity() {
             imageUri?.let { uri ->
                 try {
                     val imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-                    saveImageToGallery(imageBitmap)
+                    val rotatedBitmap = handleImageOrientation(imageBitmap, uri)
+                    saveImageToGallery(rotatedBitmap)
+
+                    // Delete the original image if necessary
+                    contentResolver.delete(uri, null, null)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
             }
         }
     }
+
+    private fun handleImageOrientation(bitmap: Bitmap, imageUri: Uri): Bitmap {
+        val inputStream = contentResolver.openInputStream(imageUri)
+        val exif = inputStream?.let { ExifInterface(it) }
+        val orientation = exif?.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_UNDEFINED
+        )
+        val rotatedBitmap: Bitmap = when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270f)
+            ExifInterface.ORIENTATION_NORMAL -> bitmap
+            else -> bitmap
+        }
+        inputStream?.close()
+        return rotatedBitmap
+    }
+
+    private fun rotateImage(source: Bitmap, angle: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(angle)
+        return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+    }
 }
+
 
 //modified code
