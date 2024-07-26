@@ -1,12 +1,15 @@
 package com.example.palayleafdiseasedetector
 
+import ImageClassifier
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,14 +27,12 @@ private const val REQUEST_IMAGE_CAPTURE = 2
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var cameraPreview: Camera2Preview
-    private lateinit var currentPhotoPath: String
+    private lateinit var currentPhotoURI: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        cameraPreview = findViewById(R.id.camera_preview)
         val subukanButton: Button = findViewById(R.id.subukan)
 
         subukanButton.setOnClickListener {
@@ -61,7 +62,6 @@ class MainActivity : AppCompatActivity() {
             != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
         } else {
-            cameraPreview.openCamera()
             dispatchTakePictureIntent()
         }
     }
@@ -72,15 +72,17 @@ class MainActivity : AppCompatActivity() {
             val photoFile: File? = try {
                 createImageFile()
             } catch (ex: IOException) {
+                Log.e("MainActivity", "Error creating image file", ex)
                 null
             }
             photoFile?.also {
-                val photoURI: Uri = FileProvider.getUriForFile(
+                currentPhotoURI = FileProvider.getUriForFile(
                     this,
                     "com.example.palayleafdiseasedetector.fileprovider",
                     it
                 )
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                Log.d("MainActivity", "Photo URI: $currentPhotoURI")
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, currentPhotoURI)
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
         }
@@ -90,25 +92,52 @@ class MainActivity : AppCompatActivity() {
     private fun createImageFile(): File {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        if (!storageDir?.exists()!! == true){
+            storageDir.mkdirs()
+        }
         return File.createTempFile(
             "JPEG_${timeStamp}_",
             ".jpg",
             storageDir
         ).apply {
-            currentPhotoPath = absolutePath
+            Log.d("MainActivity", "Image file created: $absolutePath")
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val intent = Intent(this, ConfidenceActivity::class.java).apply {
-                putExtra("imagePath", currentPhotoPath)
+            Log.d("MainActivity", "Received image capture result")
+            Log.d("MainActivity", "Photo URI on activity result: $currentPhotoURI")
+
+            try {
+                val inputStream = contentResolver.openInputStream(currentPhotoURI)
+                val imageBitmap = BitmapFactory.decodeStream(inputStream)
+                if (imageBitmap == null) {
+                    Log.e("MainActivity", "Failed to decode image.")
+                    Toast.makeText(this, "Failed to load image.", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                // Initialize the classifier
+                val classifier = ImageClassifier(this)
+                val (label, confidence) = classifier.classify(imageBitmap)
+
+                // Start ConfidenceActivity with the captured image and classification results
+                val intent = Intent(this, ConfidenceActivity::class.java).apply {
+                    putExtra("imagePath", currentPhotoURI.toString()) // Pass URI as string
+                    putExtra("label", label)
+                    putExtra("confidence", confidence)
+                }
+                startActivity(intent)
+            } catch (e: IOException) {
+                Log.e("MainActivity", "IOException while handling image", e)
+                e.printStackTrace()
+                Toast.makeText(this, "Failed to load image.", Toast.LENGTH_SHORT).show()
             }
-            startActivity(intent)
         }
     }
+
+
+
 }
-
-
-//modified 07/23/24 again
