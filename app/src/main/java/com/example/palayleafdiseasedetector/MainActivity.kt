@@ -91,9 +91,11 @@ class MainActivity : AppCompatActivity() {
     @Throws(IOException::class)
     private fun createImageFile(): File {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        if (!storageDir?.exists()!! == true){
-            storageDir.mkdirs()
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: throw IOException("Failed to get storage directory")
+        if (storageDir != null) {
+            if (!storageDir.exists() && !storageDir.mkdirs()){
+                throw IOException("Failed to create directory")
+            }
         }
         return File.createTempFile(
             "JPEG_${timeStamp}_",
@@ -111,13 +113,11 @@ class MainActivity : AppCompatActivity() {
             Log.d("MainActivity", "Photo URI on activity result: $currentPhotoURI")
 
             try {
+                // Attempt to open and decode the image
                 val inputStream = contentResolver.openInputStream(currentPhotoURI)
+                    ?: throw IOException("Failed to open input stream")
                 val imageBitmap = BitmapFactory.decodeStream(inputStream)
-                if (imageBitmap == null) {
-                    Log.e("MainActivity", "Failed to decode image.")
-                    Toast.makeText(this, "Failed to load image.", Toast.LENGTH_SHORT).show()
-                    return
-                }
+                    ?: throw IOException("Failed to decode image")
 
                 // Initialize the classifier
                 val classifier = ImageClassifier(this)
@@ -132,12 +132,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             } catch (e: IOException) {
                 Log.e("MainActivity", "IOException while handling image", e)
-                e.printStackTrace()
                 Toast.makeText(this, "Failed to load image.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-
-
 }
+//failed to decode image
