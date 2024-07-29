@@ -1,11 +1,13 @@
 package com.example.palayleafdiseasedetector
 
 import ImageClassifier
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -73,6 +75,14 @@ class ConfidenceActivity : AppCompatActivity() {
 
             classifiedTextView.text = "No image available for classification."
             resultTextView.text = ""
+        }
+
+        // Set up button to retake the photo
+        val retakeButton: Button = findViewById(R.id.retakebutton)
+        retakeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish() // Optionally finish ConfidenceActivity if you don't want it in the back stack
         }
     }
 

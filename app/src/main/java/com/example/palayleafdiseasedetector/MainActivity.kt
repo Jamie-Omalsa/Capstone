@@ -145,3 +145,4 @@ class MainActivity : AppCompatActivity() {
 //incorrect and inaccurate result
 //text color for classified should be green
 //the confidence score should be under the text of "Confidence" not above it.
+//umulit sa pagkuha will be fix i guess? hahaha lol
