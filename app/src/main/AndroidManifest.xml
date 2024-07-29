@@ -7,8 +7,9 @@
         android:required="false" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="com.example.palayleafdiseasedetector.permission.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
 
@@ -25,7 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PalayLeafDiseaseDetector"
         android:configChanges="orientation|screenSize"
-        tools:targetApi="31">
+        tools:targetApi="34">
 
         <activity
             android:name="MainActivity"
@@ -43,7 +44,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.palayleafdiseasedetector.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
