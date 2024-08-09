@@ -4,6 +4,7 @@ import ImageClassifier
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -95,7 +96,6 @@ class MainActivity : AppCompatActivity() {
         return imageFile
     }
 
-
     private fun createImageUri(): Uri? {
         val imageFile = createImageFile()
         return if (imageFile != null) {
@@ -106,7 +106,6 @@ class MainActivity : AppCompatActivity() {
             null
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -125,13 +124,24 @@ class MainActivity : AppCompatActivity() {
 
                 val (label, confidence) = classifier.classify(imageBitmap)
 
-                // Start ConfidenceActivity with the captured image URI and classification results
-                val intent = Intent(this, ConfidenceActivity::class.java).apply {
-                    putExtra("imageUri", currentPhotoURI.toString()) // Pass URI as string
-                    putExtra("label", label)
-                    putExtra("confidence", confidence)
+                if (label == "PALAY_LEAF") {
+                    // Process the image with CLAHE if it's a palay leaf
+                    val enhancedBitmap = applyCLAHE(imageBitmap)
+
+                    // Start ConfidenceActivity with the processed image URI and classification results
+                    val intent = Intent(this, ConfidenceActivity::class.java).apply {
+                        putExtra("imageUri", currentPhotoURI.toString()) // Pass URI as string
+                        putExtra("label", label)
+                        putExtra("confidence", confidence)
+                    }
+                    startActivity(intent)
+
+                } else {
+                    // Display a message and reopen the camera if the image is not a palay leaf
+                    Toast.makeText(this, "Image is not a PALAY LEAF", Toast.LENGTH_SHORT).show()
+                    openCamera()
                 }
-                startActivity(intent)
+
             } catch (e: IOException) {
                 Log.e("MainActivity", "IOException while handling image", e)
                 Toast.makeText(this, "Failed to load image.", Toast.LENGTH_SHORT).show()
@@ -139,10 +149,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    private fun applyCLAHE(bitmap: Bitmap): Bitmap {
+        // Implement the CLAHE processing here
+        // This is a placeholder method. You would need to add your CLAHE logic.
+        return bitmap
+    }
 }
 
-//incorrect and inaccurate result
-//text color for classified should be green
-//the confidence score should be under the text of "Confidence" not above it.
-//umulit sa pagkuha will be fix i guess? hahaha lol
+
+//updated version of gradle
+//binago ko na ang feature ng app. mag re reopen ang camera
+//pag hindi palay leaf ang na capture
+//if palay leaf naman ang na capture mag a undergo na ng
+//image processing tecnique CLAHE
+//codes are not yet properly implemented

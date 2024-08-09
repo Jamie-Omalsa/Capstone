@@ -4,12 +4,9 @@ import ImageClassifier
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class ConfidenceActivity : AppCompatActivity() {
@@ -23,7 +20,7 @@ class ConfidenceActivity : AppCompatActivity() {
         // Initialize the ImageClassifier
         imageClassifier = ImageClassifier(this)
 
-        // Retrieve the image URI
+        // Retrieve the image URI and classification result
         val imageUriString = intent.getStringExtra("imageUri")
         val label = intent.getStringExtra("label")
         val confidence = intent.getFloatExtra("confidence", 0f)
@@ -34,47 +31,19 @@ class ConfidenceActivity : AppCompatActivity() {
             val bitmap = BitmapFactory.decodeStream(inputStream)
             inputStream?.close()
 
-            val exifInterface = ExifInterface(contentResolver.openInputStream(imageUri)!!)
-            val orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+            if (label == "PALAY_LEAF") {
+                // Apply CLAHE to the palay leaf image
+                val claheBitmap = applyCLAHE(bitmap)
 
-            val rotatedBitmap = when (orientation) {
-                ExifInterface.ORIENTATION_ROTATE_90 -> rotateBitmap(bitmap, 90f)
-                ExifInterface.ORIENTATION_ROTATE_180 -> rotateBitmap(bitmap, 180f)
-                ExifInterface.ORIENTATION_ROTATE_270 -> rotateBitmap(bitmap, 270f)
-                else -> bitmap
-            }
-
-            if (rotatedBitmap != null) {
-                // Process the bitmap
-                val result = imageClassifier.classify(rotatedBitmap)
-
-                // Display the image and the classification result
-                val imageView: ImageView = findViewById(R.id.imageView)
-                val classifiedTextView: TextView = findViewById(R.id.classified)
-                val resultTextView: TextView = findViewById(R.id.result)
-                val confidencesTextView: TextView = findViewById(R.id.confidencesText)
-                val confidenceTextView: TextView = findViewById(R.id.confidence)
-
-                imageView.setImageBitmap(rotatedBitmap)
-                classifiedTextView.text = "Classified as:"
-                resultTextView.text = "Label: $label"
-                confidenceTextView.text = "Confidence:"
-                confidencesTextView.text = "$confidence"
+                // Display or save the processed image as needed
+                // Example: save the image or display it in an ImageView (if you want to see the result)
+                // saveBitmap(claheBitmap)
             } else {
-                // Handle case where bitmap is null
-                val classifiedTextView: TextView = findViewById(R.id.classified)
-                val resultTextView: TextView = findViewById(R.id.result)
-
-                classifiedTextView.text = "No image available for classification."
-                resultTextView.text = ""
+                // The image is not a palay leaf, reopen the camera
+                openCamera()
             }
         } else {
-            // Handle case where imageUri is null
-            val classifiedTextView: TextView = findViewById(R.id.classified)
-            val resultTextView: TextView = findViewById(R.id.result)
-
-            classifiedTextView.text = "No image available for classification."
-            resultTextView.text = ""
+            // Handle case where imageUri is null (optional error handling)
         }
 
         // Set up button to retake the photo
@@ -86,36 +55,15 @@ class ConfidenceActivity : AppCompatActivity() {
         }
     }
 
-    private fun rotateBitmap(bitmap: Bitmap, degrees: Float): Bitmap {
-        val matrix = android.graphics.Matrix().apply {
-            postRotate(degrees)
-        }
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    // Function to apply CLAHE to the bitmap (implement CLAHE algorithm here)
+    private fun applyCLAHE(bitmap: Bitmap): Bitmap {
+        // Implement your CLAHE image processing here
+        // Return the processed bitmap
+        return bitmap // Placeholder: replace with actual CLAHE implementation
+    }
+
+    private fun openCamera() {
+        // Implement the logic to reopen the camera
+        // This could be similar to the camera opening logic in your MainActivity
     }
 }
-
-
-    private fun decodeSampledBitmapFromFile(filePath: String, reqWidth: Int, reqHeight: Int): Bitmap? {
-        val options = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-            BitmapFactory.decodeFile(filePath, this)
-            inSampleSize = calculateInSampleSize(this, reqWidth, reqHeight)
-            inJustDecodeBounds = false
-            inPreferredConfig = Bitmap.Config.RGB_565  // Reduce memory usage
-        }
-        return BitmapFactory.decodeFile(filePath, options)
-    }
-
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
-        val (height: Int, width: Int) = options.run { outHeight to outWidth }
-        var inSampleSize = 1
-        if (height > reqHeight || width > reqWidth) {
-            val halfHeight: Int = height / 2
-            val halfWidth: Int = width / 2
-            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-        return inSampleSize
-    }
-
