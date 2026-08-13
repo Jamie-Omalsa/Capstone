@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".diseases.Tungro">
+
+    <!-- Back Button -->
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="80dp"
+        android:src="@drawable/baseline_arrow_circle_left_24"
+        android:id="@+id/bckBtn"
+        android:elevation="10dp"
+        android:padding="5dp"
+       />
+
+    <!-- Title Bar -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="Tungro"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:fontFamily="sans-serif-medium"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:background="#FF266839"
+        android:id="@+id/titleBar"/>
+
+    <!-- ScrollView for Disease Information -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleBar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/baseline_info_24"
+                android:scaleType="centerCrop"
+                android:id="@+id/imageV"
+                android:layout_margin="10dp"/>
+
+            <!-- Name of Disease -->
+            <TextView
+                android:id="@+id/diseaseName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name of Disease: Tungro"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_below="@id/imageV"
+                android:fontFamily="sans-serif"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Type of Disease -->
+            <TextView
+                android:id="@+id/diseaseType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type of Disease: Virus"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/diseaseName"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/diseaseDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description: Rice tungro disease is caused by the combination of two viruses: Rice tungro bacilliform virus (RTBV) and Rice tungro spherical virus (RTSV). It is transmitted by leafhoppers and causes leaf discoloration, stunted growth, reduced tiller numbers, and sterile or partly filled grains. Tungro infects cultivated rice, some wild rice relatives, and other grassy weeds commonly found in rice paddies. The most efficient vector is the green leafhopper.\n\nLeafhoppers can acquire the viruses from any part of the infected plant by feeding on it, even for a short time. They can then transmit the viruses to other plants within 5−7 days. The viruses do not remain in the leafhopper's body unless it feeds again on an infected plant and re-acquires the viruses. Tungro infection can occur during all growth stages of the rice plant, but it is most frequently seen during the vegetative phase. Plants are most vulnerable at the tillering stage.\n\nNote: Once a rice plant is infected by tungro, it cannot be cured. Preventive measures are more effective for the control of tungro than direct disease control measures. Using insecticides to control leafhoppers is often not effective, because green leafhoppers continuously move to surrounding fields and spread tungro rapidly in very short feeding times."
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/diseaseType"
+                android:layout_marginBottom="16dp"
+                android:justificationMode="inter_word"/>
+
+            <!-- Recommendations -->
+            <TextView
+                android:id="@+id/diseaseRecommendations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recommendations: \n• Grow tungro or leafhopper resistant varieties. This is the most economical means of managing the disease. There are tungro-resistant varieties available for the Philippines, Malaysia, Indonesia, India, and Bangladesh. Contact your local agriculture office for up-to-date lists of varieties available.\n• Practice synchronous planting with surrounding farms. Delayed or late planting, relative to the average date in a given area, makes the field susceptible for Tungro. Late-planted fields also pose a risk to early planting in the next season.\n• Adjust planting times to when green leafhoppers are not in season or abundant, if known.\n• Plow infected stubbles immediately after harvest to reduce inoculum sources and destroy the eggs and breeding sites of green leafhoppers."
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:justificationMode="inter_word"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/diseaseDescription"
+                android:layout_marginBottom="16dp"/>
+
+            <android.widget.Button
+                android:layout_width="285dp"
+                android:layout_height="50dp"
+                android:text="Save Image to Gallery"
+                android:textColor="@android:color/white"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="16sp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_bg"
+                android:layout_below="@+id/diseaseRecommendations"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
+                android:id="@+id/saveBtn"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

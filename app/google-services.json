@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "769257043524",
+    "project_id": "cfca-1e6f5",
+    "storage_bucket": "cfca-1e6f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769257043524:android:4c9db777bceef0dfa1ae11",
+        "android_client_info": {
+          "package_name": "com.app.palayleaf"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdTG26itANRxIR4k4IsdQRVZlvOJcn5Mc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

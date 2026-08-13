@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".diseases.NarrowBrownSpot">
+
+    <!-- Back Button -->
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="80dp"
+        android:src="@drawable/baseline_arrow_circle_left_24"
+        android:id="@+id/bckBtn"
+        android:elevation="10dp"
+        android:padding="5dp" />
+
+    <!-- Title Bar -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="Narrow Brown Spot"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:fontFamily="sans-serif-medium"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:background="#FF266839"
+        android:id="@+id/titleBar"/>
+
+    <!-- ScrollView for Disease Information -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleBar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/baseline_info_24"
+                android:scaleType="centerCrop"
+                android:id="@+id/imageV"
+                android:layout_margin="10dp"/>
+            <!-- Name of Disease -->
+            <TextView
+                android:id="@+id/diseaseName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name of Disease: Narrow Brown Spot"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_below="@id/imageV"
+                android:fontFamily="sans-serif"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Type of Disease -->
+            <TextView
+                android:id="@+id/diseaseType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type of Disease: Fungal"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/diseaseName"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/diseaseDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description: Narrow brown spot (also called narrow brown leaf spot, or rice Cercospora leaf spot) is caused by the fungus Sphaerulina oryzina (syn. Cercospora janseana, Cercospora oryzae) and can infect leaves, sheaths, and panicles. It leads to premature death of leaves and leaf sheaths, premature ripening of grains, and in severe cases, lodging of plants."
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/diseaseType"
+                android:layout_marginBottom="16dp"
+                android:justificationMode="inter_word"/>
+
+            <!-- Recommendations -->
+            <TextView
+                android:id="@+id/diseaseRecommendations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recommendations: \n• Use resistant varieties. Contact your local agriculture office for up-to-date lists of varieties available.\n• Keep fields clean.\n• Remove weeds and weedy rice in the field and nearby areas to remove alternate hosts that allow the fungus to survive and infect new rice crops.\n• Use balanced nutrients; make sure that adequate potassium is used.\n• If narrow brown spot poses a risk to the field, spray propiconazole at booting to heading stages."
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:justificationMode="inter_word"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/diseaseDescription"
+                android:layout_marginBottom="16dp"/>
+
+            <android.widget.Button
+                android:layout_width="285dp"
+                android:layout_height="50dp"
+                android:text="Save Image to Gallery"
+                android:textColor="@android:color/white"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="16sp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_bg"
+                android:layout_below="@+id/diseaseRecommendations"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
+                android:id="@+id/saveBtn"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

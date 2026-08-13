@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:id="@+id/mainLay"
+    tools:context=".SplashScreen">
+
+    <ImageView
+        android:id="@+id/logOut"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        android:src="@drawable/baseline_logout_24" />
+
+    <ImageView
+        android:id="@+id/viewBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        android:src="@drawable/baseline_manage_search_24" />
+
+
+
+    <ImageView
+        android:id="@+id/mPhoto"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_below="@+id/logOut"
+        android:contentDescription="Capture Image Here"
+        app:srcCompat="@drawable/logo"
+        android:layout_marginBottom="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mPhoto"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins"
+        android:text="Palay Leaf Disease Detector"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins"
+        android:text="App by average studs"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+
+    <android.widget.Button
+        android:text="SUBUKAN"
+        android:fontFamily="@font/bai_jamjuree"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:elevation="20dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:id="@+id/subukanBtn"
+        android:background="@drawable/btn_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="50dp"/>
+
+
+
+        <TextView
+            android:id="@+id/txt6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/subukanBtn"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="30dp"
+            android:fontFamily="@font/poppins"
+            android:text="Ang layunin ng aplikasyon na ito ay makatulong sa pag tuklas ng iba't ibang sakit na mayroon sa dahon ng palay. Ito ay upang matulungan ang ating mga magsasakang Pilipino na magkaroon ng mas kalidad na ani.\n\nPindutin upang subukan ang app.
+\n\nVersion 1.0.6"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textSize="14sp" />
+
+</RelativeLayout>

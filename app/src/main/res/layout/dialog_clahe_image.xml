@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <!-- Title TextView -->
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Image Applied CLAHE"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="sans-serif-medium" />
+
+    <!-- ImageView for CLAHE processed image -->
+    <ImageView
+        android:id="@+id/claheImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="20dp"
+        android:scaleType="centerCrop" />
+
+    <!-- Button to trigger disease detection -->
+    <android.widget.Button
+        android:id="@+id/detectButton"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="Detect Disease"
+        android:textSize="16sp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_bg"
+        android:textColor="@android:color/white"
+        android:fontFamily="sans-serif-medium"/>
+
+    <!-- TextView for displaying detection results -->
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Result will be displayed here"
+        android:layout_marginTop="8dp"/>
+
+    <!-- TextView for displaying confidence level -->
+    <TextView
+        android:id="@+id/confidenceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confidence will be displayed here"
+        android:layout_marginTop="4dp"/>
+
+</LinearLayout>
