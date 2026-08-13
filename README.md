@@ -1,1 +1,1 @@
-i integrated the camera but the image when saved is in low quality.
+Lates version of Palay Leaf Disease Detector
